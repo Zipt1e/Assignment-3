@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
+from tkinter.tix import IMAGETEXT
 from googletrans import Translator, LANGUAGES
 from gtts import gTTS
 from pygame import mixer
@@ -90,8 +91,8 @@ class TranslatorApp(tk.Tk):
             messagebox.showerror("Error", "Please enter text to translate.")
             return
         translated_text = self.translator.translate(input_text, src=src_lang, dest=target_lang).text
-        self.output_text.delete("1.0", tk.END)
-        self.output_text.insert(tk.END, translated_text)
+        self.output_text.delete("1.0", tk.END)   # Clear output text area
+        self.output_text.insert(tk.END, translated_text)  # Display translated text
 
     # Method to speak translated text
     def speak_translated_text(self):
@@ -117,8 +118,8 @@ class TranslatorApp(tk.Tk):
 
     # Method to create decorative elements (placeholder)
     def create_decorative_panel(self):
-        # This method can be used to add decorative elements if needed
-        pass
+       self.decorative_label = tk.Label(self, text="Enhanced Universal Language Translator", bg='#333333', fg='#4CAF50', font=("Times New Roman", 16, "bold"))
+       self.decorative_label.grid(row=4, column=0, columnspan=4, pady=10, sticky="ew")
 
     # Method to extract text from an image
     def extract_text_from_image(self):
