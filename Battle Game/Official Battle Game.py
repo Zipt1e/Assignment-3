@@ -15,9 +15,7 @@ bottom_panel = 200
 WIDTH = 800
 HEIGHT = 400 + bottom_panel
 
-
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
-
 
 #define game variables 
 current_fighter = 1 
@@ -29,7 +27,7 @@ clicked = False
 
 
 #Create game name 
-pygame.display.set_caption('Assignement 3 - Battle Game')
+pygame.display.set_caption('Assignment 3 - Battle Game')
 
 #define fonts 
 font = pygame.font.SysFont('Times New Roman', 26,)
@@ -110,7 +108,7 @@ class Fighter():
             self.frame_index += 1
         # if animation finishes, reset to the start
         if self.frame_index >= len(self.animation_list[self.action]):
-            self.idle()
+            self.idle ()
 
     def idle (self):
         self.action = 0
@@ -121,8 +119,9 @@ class Fighter():
     def attack(self, target):
         # do some damage to the enemy
         rand = random.randint(-5, 5)
-        damage = self.strength + rand
+        damage = max(0, self.strength + rand)
         target.hp -= damage
+    
         #check if target has died 
         if target.hp < 1: 
             target.hp = 0
@@ -150,6 +149,8 @@ class HealthBar():
 
     def draw(self, hp):
         #update with new health on bar (green / red) 
+        self.hp=hp
+        #calculate health ratio
         ratio = self.hp / self.max_hp
         pygame.draw.rect(screen, red, (self.x, self.y, 200, 20))
         pygame.draw.rect(screen, green, (self.x, self.y, 200 * ratio, 20))
@@ -163,6 +164,7 @@ bandit_list.append(bandit)
 
 knight_health_bar = HealthBar(100, HEIGHT - bottom_panel +60, knight.hp, knight.max_hp)
 bandit_health_bar = HealthBar(500, HEIGHT - bottom_panel +60, bandit.hp, bandit.max_hp)
+
 
 ############ Main game loop ############
 run = True 
@@ -212,14 +214,15 @@ while run:
                 action_cooldown = 0 # Reset the cooldown
 
     #enemy action 
-    if bandit.alive == True:
-        if current_fighter == 2:
-            action_cooldown += 1
-            if action_cooldown >= action_wait_time:
+    for bandit in (bandit_list):
+        if bandit.alive == True:
+            if current_fighter == 2:
+                action_cooldown += 1
+                if action_cooldown >= action_wait_time:
                 #attack 
-                bandit.attack(knight)
-                current_fighter += 1
-                action_cooldown = 0 
+                    bandit.attack(knight)
+                    current_fighter += 1
+                    action_cooldown = 0 
         else:current_fighter += 1 
 
 
