@@ -125,7 +125,9 @@ class Fighter():
         #check if target has died 
         if target.hp < 1: 
             target.hp = 0
-            target.alive = False 
+            target.alive = False
+        damage_text = DamageText(target.rect.centerx, target.rect.y, str(damage), red)
+        damage_text_group.add(damage_text) 
 
         # Update the health bar after the attack
         knight_health_bar.hp = target.hp
@@ -154,6 +156,25 @@ class HealthBar():
         ratio = self.hp / self.max_hp
         pygame.draw.rect(screen, red, (self.x, self.y, 200, 20))
         pygame.draw.rect(screen, green, (self.x, self.y, 200 * ratio, 20))
+
+class DamageText(pygame.sprite.Sprite):
+	def __init__(self, x, y, damage, colour):
+		pygame.sprite.Sprite.__init__(self)
+		self.image = font.render(damage, True, colour)
+		self.rect = self.image.get_rect()
+		self.rect.center = (x, y)
+		self.counter = 0
+
+	def update(self):
+		#move damage text up
+		self.rect.y -= 1
+		#delete the text after a few seconds
+		self.counter += 1
+		if self.counter > 30:
+			self.kill()
+
+
+damage_text_group = pygame.sprite.Group()
 
 
 knight = Fighter(100, 260, 'Knight', 30, 10, 3, 3)
@@ -186,6 +207,11 @@ while run:
     for bandit in bandit_list:  
         bandit.update()
         bandit.draw()
+
+#draw the damage text
+    
+    damage_text_group.update()
+    damage_text_group.draw(screen)
 
     #control player actions 
     #reset action variables 
